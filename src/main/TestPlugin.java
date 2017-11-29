@@ -26,6 +26,8 @@ public class TestPlugin extends PluginService implements CView.onClickListener {
     private CButton cButton02;
     private CButton cButton03;
     private CButton cButton04;
+    private CButton cButton05;
+    private CButton cButton06;
 
     @Override
     public void onCreate(Lorder lorder) {
@@ -38,7 +40,10 @@ public class TestPlugin extends PluginService implements CView.onClickListener {
         cButton03.setId("id_003");
         cButton04 = new CButton("PDF中创建表格");
         cButton04.setId("id_004");
-
+        cButton05 = new CButton("PDF中创建列表");
+        cButton05.setId("id_005");
+        cButton06 = new CButton("PDF中设置样式/格式化输出，输出中文内容");
+        cButton06.setId("id_006");
 
         CTextView cTextView = new CTextView();
         cTextView.setText("I am a textview please do not click me!");
@@ -68,7 +73,7 @@ public class TestPlugin extends PluginService implements CView.onClickListener {
         //HorizontalLayout horizontalLayout = new HorizontalLayout();
         VerticleLayout verticleLayout = new VerticleLayout();
         verticleLayout.addView(cTextView);
-        verticleLayout.addView(cButton01, cButton02, cButton03,cButton04);
+        verticleLayout.addView(cButton01, cButton02, cButton03,cButton04,cButton05,cButton06);
         verticleLayout.addView(cEditView);
         verticleLayout.addView(cImageView);
         verticleLayout.addView(cCheckBox);
@@ -79,14 +84,16 @@ public class TestPlugin extends PluginService implements CView.onClickListener {
         cButton02.setOnClickListener(this);
         cButton03.setOnClickListener(this);
         cButton04.setOnClickListener(this);
+        cButton05.setOnClickListener(this);
+        cButton06.setOnClickListener(this);
         System.out.println("A客户插件onCreate~");
 
         Thread thread = null;
         thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                for (int i = 0; i <= 1000; i++) {
-                    double a = Math.max(4.15, 4.153) * 3.1418926;
+                for (int i = 0; i <= 500; i++) {
+                    //double a = Math.max(4.15, 4.153) * 3.1418926;
                     try {
                         Thread.sleep(10);
                     } catch (Exception e) {
@@ -116,9 +123,9 @@ public class TestPlugin extends PluginService implements CView.onClickListener {
         String filePath = "D:/BaiduNetdiskDownload/PowerDesigner_15副本.pdf";
         if (!FileUtils.checkFileType(".pdf", filePath)) {
             System.out.println("文件不存在正在创建文件" + filePath + "。。。");
-            File file = new File(filePath);
+            //File file = new File(filePath);
             try {
-                if (file.createNewFile()) {
+                if (FileUtils.createFile(filePath)) {
                     System.out.println("文件创建成功");
                     return true;
                 } else {
@@ -164,6 +171,12 @@ public class TestPlugin extends PluginService implements CView.onClickListener {
                         break;
                     case "id_004":
                         PDFHelper.makePDF04("D:/BaiduNetdiskDownload/PowerDesigner_15副本.pdf");
+                        break;
+                    case "id_005":
+                        PDFHelper.makePDF05("D:/BaiduNetdiskDownload/PowerDesigner_15副本.pdf");
+                        break;
+                    case "id_006":
+                        PDFHelper.makePDF06("D:/BaiduNetdiskDownload/PowerDesigner_15副本.pdf");
                         break;
                 }
             }

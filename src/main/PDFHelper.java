@@ -1,13 +1,9 @@
 package main;
 
-import com.lowagie.text.Document;
-import com.lowagie.text.Element;
+import com.lowagie.text.*;
+import com.lowagie.text.Font;
 import com.lowagie.text.Image;
-import com.lowagie.text.Paragraph;
-import com.lowagie.text.pdf.PdfPCell;
-import com.lowagie.text.pdf.PdfPRow;
-import com.lowagie.text.pdf.PdfPTable;
-import com.lowagie.text.pdf.PdfWriter;
+import com.lowagie.text.pdf.*;
 import interfaces.Lorder;
 import util.FileUtils;
 
@@ -16,6 +12,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.net.URL;
 import java.util.List;
+
+import static jdk.nashorn.internal.runtime.regexp.joni.Syntax.Java;
 
 /**
  * Created by huan on 2017/11/28.
@@ -160,7 +158,7 @@ public class PDFHelper {
                 table.setSpacingBefore(10f); // 前间距
                 table.setSpacingAfter(10f); // 后间距
 
-                List<PdfPRow> listRow = table.getRows();
+            List<PdfPRow> listRow = table.getRows();
                 //设置列宽
                 float[] columnWidths = { 1f, 2f, 3f };
                 table.setWidths(columnWidths);
@@ -200,6 +198,82 @@ public class PDFHelper {
         System.out.println("pdf end");
     }
 
+    //PDF中创建列表
+    public static void makePDF05(String filePath) {
+        try {
+            //创建文件
+            Document document = new Document();
+            //建立一个书写器
+            PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(filePath));
+            //打开文件
+            document.open();
+            //添加内容
+            document.add(new Paragraph("HD content here"));
+
+            //添加有序列表
+            com.lowagie.text.List orderedList = new com.lowagie.text.List(com.lowagie.text.List.ORDERED);
+            orderedList.add(new ListItem("Item one"));
+            orderedList.add(new ListItem("Item two"));
+            orderedList.add(new ListItem("Item three"));
+            document.add(orderedList);
+
+            //关闭文档
+            document.close();
+            //关闭书写器
+            writer.close();
+        } catch (Exception e) {
+            System.out.println("pdf error:" + e.getMessage());
+        }
+        System.out.println("pdf end");
+    }
+
+    public static void makePDF06(String filePath) {
+        try {
+                //创建文件
+                Document document = new Document();
+                //建立一个书写器
+                PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(filePath));
+                //打开文件
+                document.open();
+
+                //中文字体,解决中文不能显示问题
+                BaseFont bfChinese = BaseFont.createFont("STSong-Light","UniGB-UCS2-H",BaseFont.NOT_EMBEDDED);
+
+                //蓝色字体
+                Font blueFont = new Font(bfChinese);
+                blueFont.setColor(Color.BLUE);
+                //段落文本
+                Paragraph paragraphBlue = new Paragraph("paragraphOne blue front", blueFont);
+                document.add(paragraphBlue);
+
+                //绿色字体
+                Font greenFont = new Font(bfChinese);
+                greenFont.setColor(Color.GREEN);
+                //创建章节
+                Paragraph chapterTitle = new Paragraph("段落标题xxxx", greenFont);
+                Chapter chapter1 = new Chapter(chapterTitle, 1);
+                chapter1.setNumberDepth(0);
+
+                Paragraph sectionTitle = new Paragraph("部分标题", greenFont);
+                Section section1 = chapter1.addSection(sectionTitle);
+
+                Paragraph sectionContent = new Paragraph("部分内容", blueFont);
+                section1.add(sectionContent);
+
+                //将章节添加到文章中
+                document.add(chapter1);
+
+                //关闭文档
+                document.close();
+                //关闭书写器
+                writer.close();
+
+        } catch (Exception e) {
+            System.out.println("pdf error:" + e.getMessage());
+        }
+        System.out.println("pdf end");
+    }
+
     public static void makePDF0400(String filePath) {
         try {
 
@@ -208,5 +282,6 @@ public class PDFHelper {
         }
         System.out.println("pdf end");
     }
+
 
 }
